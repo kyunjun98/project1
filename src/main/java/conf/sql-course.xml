@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+				  "dtd/mybatis-3-mapper.dtd">
+<mapper namespace="course">
+	<resultMap id="courseResult" type="course">
+		<result property="courseCode" column="COURSE_CODE" />
+		<result property="courseName" column="COURSE_NAME" />
+		<result property="courseScore" column="COURSE_SCORE" />
+		<result property="courseCategoryCd" column="COURSE_CATEGORY_CD" />
+		<result property="courseAssignYn" column="COURSE_ASSIGN_YN" />
+		<result property="courseMaxNumber" column="COURSE_MAX_NUMBER" />
+		<result property="courseCurNumber" column="COURSE_CUR_NUMBER" />
+		<result property="courseClassroom" column="COURSE_CLASSROOM" />
+		<result property="courseDay" column="COURSE_DAY" />
+		<result property="coursePeriod" column="COURSE_PERIOD" />
+		<result property="courseRegDate" column="COURSE_REG_DATE" />
+	</resultMap>
+
+	<select id="retrieveCourseList" resultType="map" parameterType="map">
+			/*	retrieveCourseList	*/
+			SELECT COURSE.COURSE_CODE
+			     , COURSE.COURSE_NAME
+			     <if test="userCode != null">
+			     	, (CASE WHEN (SELECT COURSE_CODE FROM TB_STUDENT_REG WHERE COURSE_CODE IN(COURSE.COURSE_CODE) AND USER_CODE = #{userCode}) IS NOT NULL
+			     				THEN 'N' ELSE 'Y' END) AS REGISTER_YN
+			     </if>
+			     , COURSE.COURSE_SCORE
+			     , COURSE_CATEGORY_CD
+			     , COURSE_ASSIGN_YN
+			     , COURSE_MAX_NUMBER
+			     , COURSE_CUR_NUMBER
+			     , (SELECT COMM_CD_NM FROM TB_COM_CODE WHERE 1=1 AND COMM_TY_CD = 'CODE0102' AND COMM_CD = COURSE.COURSE_CATEGORY_CD) AS COURSE_CATEGORY_CD_NM
+			     , COURSE_CLASSROOM
+			     , COURSE_DAY
+			     , COURSE_PERIOD
+			     , COURSE.COURSE_REG_DATE
+			FROM   TB_COURSE COURSE
+			WHERE 1=1
+			ORDER BY COURSE.COURSE_REG_DATE DESC
+	</select>
+
+	<select id="retrieveCourse" parameterType="map" resultType="map">
+		/*	retrieveCourse	*/
+		SELECT COURSE.COURSE_CODE
+		     , COURSE.COURSE_NAME
+		     , COURSE.COURSE_SCORE
+		     , COURSE.COURSE_CATEGORY_CD
+		     , COURSE.COURSE_ASSIGN_YN
+		     , COURSE.COURSE_MAX_NUMBER
+		     , COURSE.COURSE_CUR_NUMBER
+		     , (SELECT COMM_CD_NM FROM TB_COM_CODE WHERE 1=1 AND COMM_TY_CD = 'CODE0102' AND COMM_CD = COURSE.COURSE_CATEGORY_CD) AS COURSE_CATEGORY_CD_NM
+		     , COURSE_CLASSROOM
+		     , COURSE_DAY
+		     , COURSE_PERIOD
+			 , COURSE.COURSE_REG_DATE
+
+		FROM   TB_COURSE COURSE
+		WHERE  1=1
+		AND    COURSE_CODE = #{courseCode}
+	</select>
+
+	<insert id="createCourse" parameterType="course">
+		<![CDATA[
+		/*	createCourse	*/
+		INSERT INTO TB_COURSE(
+			  COURSE_CODE
+			, COURSE_NAME
+			, COURSE_SCORE
+			, COURSE_MAX_NUMBER
+		    , COURSE_CLASSROOM
+		    , COURSE_DAY
+		    , COURSE_PERIOD
+			, COURSE_REG_DATE
+		) VALUES (
+			  CONCAT('C',LPAD((SELECT COALESCE(MAX(SEQ_NO) + 1, 1) FROM TB_MAPP_SEQ WHERE SEQ_TYPE = 'COURSE_SEQ'), 4, 0))
+			, #{courseName}
+			, #{courseScore}
+			, #{courseMaxNumber}
+			, #{courseClassroom}
+			, #{courseDay}
+			, #{coursePeriod}
+			, DATE_FORMAT(SYSDATE(), '%Y-%m-%d %H:%i')
+		)
+		]]>
+	</insert>
+
+	<update id="updateCurNumberPlus" parameterType="map">
+		<![CDATA[
+			/*	updateCurNumberPlus	*/
+			UPDATE TB_COURSE
+			SET COURSE_CUR_NUMBER = COURSE_CUR_NUMBER + 1
+			WHERE COURSE_CODE = #{courseCode}
+		]]>
+	</update>
+
+	<delete id="deleteCourse" parameterType="map">
+		<![CDATA[
+			/*	deleteCourse	*/
+			DELETE
+			FROM TB_COURSE
+			WHERE COURSE_CODE = #{courseCode}
+		]]>
+	</delete>
+
+	<update id="updateCurNumberMinus" parameterType="map">
+		<![CDATA[
+			/*	updateCurNumberMinus	*/
+			UPDATE TB_COURSE
+			SET COURSE_CUR_NUMBER = COURSE_CUR_NUMBER - 1
+			WHERE COURSE_CODE = #{courseCode}
+		]]>
+	</update>
+
+	<update id="updateAssignYn" parameterType="map">
+		<![CDATA[
+			/*	updateAssignYn	*/
+			UPDATE TB_COURSE
+			SET COURSE_ASSIGN_YN = #{courseAssignYn}
+			WHERE COURSE_CODE = #{courseCode}
+		]]>
+	</update>
+
+	<update id="updateCourse" parameterType="map">
+		<![CDATA[
+			/*	updateCourse	*/
+			UPDATE TB_COURSE
+			SET COURSE_NAME              = #{courseName}
+			  , COURSE_SCORE	         = #{courseScore}
+		      , COURSE_CLASSROOM         = #{courseClassroom}
+		      , COURSE_DAY               = #{courseDay}
+		      , COURSE_PERIOD            = #{coursePeriod}
+			WHERE COURSE_CODE = #{courseCode}
+		]]>
+	</update>
+</mapper>

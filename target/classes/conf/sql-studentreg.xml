@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+				  "dtd/mybatis-3-mapper.dtd">
+<mapper namespace="studentreg">
+	<resultMap id="studentResult" type="studentreg">
+		<result property="studentRegCode" column="STUDENT_REG_CODE" />
+		<result property="courseCode" column="COURSE_CODE" />
+		<result property="userCode" column="USER_CODE" />
+		<result property="score" column="SCORE" />
+	</resultMap>
+
+	<insert id="createStudentreg" parameterType="map">
+		<![CDATA[
+			INSERT INTO TB_STUDENT_REG(
+			  STUDENT_REG_CODE
+			, COURSE_CODE
+			, USER_CODE
+			) VALUES (
+			  CONCAT('S',LPAD((SELECT COALESCE(MAX(SEQ_NO) + 1, 1) FROM TB_MAPP_SEQ WHERE SEQ_TYPE = 'STUDENT_REG_SEQ'), 4, 0))
+			, #{courseCode}
+			, #{userCode}
+			)
+		]]>
+	</insert>
+
+	<update id="updateScore" parameterType="map">
+		<![CDATA[
+			UPDATE TB_STUDENT_REG SET
+			SCORE = #{score}
+			WHERE STUDENT_REG_CODE = #{studentRegCode}
+		]]>
+	</update>
+
+
+	<select id="retrieveStudentregInfo" parameterType="map" resultType="map">
+		<![CDATA[
+			SELECT (CASE WHEN COURSE.COURSE_DAY = #{courseDay} AND COURSE_PERIOD = #{coursePeriod} THEN 'Y' ELSE 'N' END) ANSWER_YN
+			FROM   TB_STUDENT_REG STUDENT
+	     			INNER JOIN TB_COURSE COURSE ON COURSE.COURSE_CODE = STUDENT.COURSE_CODE
+	     	WHERE   STUDENT.USER_CODE = #{userCode}
+	    ]]>
+	</select>
+
+	<select id="retrieveStudentregList" parameterType="map" resultType="map">
+		<![CDATA[
+			SELECT STUDENT.STUDENT_REG_CODE
+				 , STUDENT.COURSE_CODE
+				 , COURSE.COURSE_NAME
+				 , COURSE.COURSE_SCORE
+				 , COURSE.COURSE_CATEGORY_CD
+				 , (SELECT COMM_CD_NM FROM TB_COM_CODE WHERE 1=1 AND COMM_TY_CD = 'CODE0102' AND COMM_CD = COURSE.COURSE_CATEGORY_CD) AS COURSE_CATEGORY_CD_NM
+ 			     , COURSE_CLASSROOM
+ 			     , COURSE_DAY
+ 			     , COURSE_PERIOD
+ 			     , COALESCE((SELECT SUM(COURSE.COURSE_SCORE)
+ 			       FROM   TB_STUDENT_REG STUDENT
+ 			       		INNER JOIN TB_COURSE COURSE ON COURSE.COURSE_CODE = STUDENT.COURSE_CODE
+ 			       WHERE 1 = 1
+ 			       AND STUDENT.USER_CODE = #{userCode}), 0) AS COURSE_TOTAL_SCORE
+			FROM   TB_STUDENT_REG STUDENT
+			INNER JOIN TB_COURSE COURSE ON
+				  COURSE.COURSE_CODE = STUDENT.COURSE_CODE
+			WHERE  1=1
+			AND    STUDENT.USER_CODE = #{userCode}
+		]]>
+	</select>
+
+	<delete id="deleteStudentreg" parameterType="map">
+		<![CDATA[
+			DELETE
+			FROM   TB_STUDENT_REG
+			WHERE  1=1
+			AND    STUDENT_REG_CODE = #{studentRegCode}
+		]]>
+	</delete>
+
+	<delete id="deleteStudentregAll" parameterType="map">
+		<![CDATA[
+			DELETE
+			FROM   TB_STUDENT_REG
+			WHERE  1=1
+			AND    COURSE_CODE = #{courseCode}
+		]]>
+	</delete>
+
+</mapper>

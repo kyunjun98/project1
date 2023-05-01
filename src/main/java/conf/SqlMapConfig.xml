@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+	"dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<typeAliases>
+		<typeAlias type="work.user.UserBean" alias="user"/>
+		<typeAlias type="work.course.CourseBean" alias="course"/>
+		<typeAlias type="work.professorreg.ProfessorregBean" alias="professorreg"/>
+		<typeAlias type="work.studentreg.StudentregBean" alias="studentreg"/>
+		<typeAlias type="work.code.CodeBean" alias="code"/>
+	</typeAliases>
+
+	<mappers>
+		<mapper resource="conf/sql-user.xml" />
+		<mapper resource="conf/sql-course.xml" />
+		<mapper resource="conf/sql-professorreg.xml" />
+		<mapper resource="conf/sql-studentreg.xml" />
+		<mapper resource="conf/sql-code.xml" />
+	</mappers>
+</configuration>

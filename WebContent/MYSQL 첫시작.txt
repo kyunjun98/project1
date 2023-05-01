@@ -1,0 +1,9 @@
+CREATE USER course@localhost IDENTIFIED BY 'course';
+
+CREATE DATABASE course DEFAULT CHARACTER SET UTF8;
+
+GRANT ALL PRIVILEGES ON *.* to 'course'@'localhost' identified by 'course' with grant option;
+
+FLUSH PRIVILEGES;
+
+

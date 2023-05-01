@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+				  "dtd/mybatis-3-mapper.dtd">
+<mapper namespace="professorreg">
+	<resultMap id="professorResult" type="professorreg">
+		<result property="professorRegCode" column="PROFESSOR_REG_CODE" />
+		<result property="courseCode" column="COURSE_CODE" />
+		<result property="userCode" column="USER_CODE" />
+	</resultMap>
+
+	<insert id="createProfessorreg" parameterType="map">
+		<![CDATA[
+			INSERT INTO TB_PROFESSOR_REG(
+			  PROFESSOR_REG_CODE
+			, COURSE_CODE
+			, USER_CODE
+			) VALUES (
+			  CONCAT('P',LPAD((SELECT COALESCE(MAX(SEQ_NO) + 1, 1) FROM TB_MAPP_SEQ WHERE SEQ_TYPE = 'PROFESSOR_REG_SEQ'), 4, 0))
+			, #{courseCode}
+			, #{userCode}
+			)
+		]]>
+	</insert>
+
+	<select id="retrieveProfessorregInfo" parameterType="map" resultType="map">
+		<![CDATA[
+			SELECT (CASE WHEN COURSE.COURSE_DAY = #{courseDay} AND COURSE_PERIOD = #{coursePeriod} THEN 'Y' ELSE 'N' END) ANSWER_YN
+			FROM   TB_PROFESSOR_REG PROFESSOR
+	     			INNER JOIN TB_COURSE COURSE ON COURSE.COURSE_CODE = PROFESSOR.COURSE_CODE
+	     	WHERE   PROFESSOR.USER_CODE = #{userCode}
+	    ]]>
+	</select>
+
+	<select id="retrieveProfessorregList" parameterType="map" resultType="map">
+		<![CDATA[
+			SELECT PROFESSOR.PROFESSOR_REG_CODE
+				 , PROFESSOR.COURSE_CODE
+				 , COURSE.COURSE_NAME
+				 , COURSE.COURSE_SCORE
+				 , COURSE.COURSE_CATEGORY_CD
+				 , (SELECT COMM_CD_NM FROM TB_COM_CODE WHERE 1=1 AND COMM_TY_CD = 'CODE0102' AND COMM_CD = COURSE.COURSE_CATEGORY_CD) AS COURSE_CATEGORY_CD_NM
+ 			     , COURSE_CLASSROOM
+ 			     , COURSE_DAY
+ 			     , COURSE_PERIOD
+ 			     , COALESCE((SELECT SUM(COURSE.COURSE_SCORE)
+ 			       FROM   TB_PROFESSOR_REG PROFESSOR
+ 			       		INNER JOIN TB_COURSE COURSE ON COURSE.COURSE_CODE = PROFESSOR.COURSE_CODE
+ 			       WHERE 1 = 1
+ 			       AND PROFESSOR.USER_CODE = #{userCode}), 0) AS COURSE_TOTAL_SCORE
+			FROM   TB_PROFESSOR_REG PROFESSOR
+			INNER JOIN TB_COURSE COURSE ON
+				  COURSE.COURSE_CODE = PROFESSOR.COURSE_CODE
+			WHERE  1=1
+			AND    PROFESSOR.USER_CODE = #{userCode}
+		]]>
+	</select>
+
+	<select id="retrieveCourseForScore" parameterType="map" resultType="map">
+		<![CDATA[
+			SELECT PROFESSOR.PROFESSOR_REG_CODE
+				 , PROFESSOR.COURSE_CODE
+				 , COURSE.COURSE_NAME
+				 , COURSE.COURSE_SCORE
+				 , COURSE.COURSE_CATEGORY_CD
+				 , (SELECT COMM_CD_NM FROM TB_COM_CODE WHERE 1=1 AND COMM_TY_CD = 'CODE0102' AND COMM_CD = COURSE.COURSE_CATEGORY_CD) AS COURSE_CATEGORY_CD_NM
+				 , STUDENT.SCORE
+				 , STUDENT.STUDENT_REG_CODE
+				 , (SELECT NAME FROM TB_COM_USER CU WHERE CU.USER_CODE = STUDENT.USER_CODE) STUDENT_NAME
+				 , (SELECT NAME FROM TB_COM_USER CU WHERE CU.USER_CODE = PROFESSOR.USER_CODE) PROFESSOR_NAME
+			FROM   TB_PROFESSOR_REG PROFESSOR
+			INNER JOIN TB_COURSE COURSE ON COURSE.COURSE_CODE = PROFESSOR.COURSE_CODE
+			INNER JOIN TB_STUDENT_REG STUDENT ON STUDENT.COURSE_CODE = PROFESSOR.COURSE_CODE
+			WHERE  1=1
+		]]>
+		<if test='grade == "P"'>
+			AND    PROFESSOR.USER_CODE = #{userCode}
+		</if>
+		<if test='grade == "S"'>
+			AND    STUDENT.USER_CODE = #{userCode}
+		</if>
+
+
+	</select>
+
+	<delete id="deleteProfessorreg" parameterType="map">
+		<![CDATA[
+			DELETE
+			FROM   TB_PROFESSOR_REG
+			WHERE  1=1
+			AND    PROFESSOR_REG_CODE = #{professorRegCode}
+		]]>
+	</delete>
+
+	<delete id="deleteProfessorregAll" parameterType="map">
+		<![CDATA[
+			DELETE
+			FROM   TB_PROFESSOR_REG
+			WHERE  1=1
+			AND    COURSE_CODE = #{courseCode}
+		]]>
+	</delete>
+
+</mapper>
