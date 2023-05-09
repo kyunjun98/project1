@@ -92,4 +92,8 @@ public class UserDAO {
 	public Map<String,String> retrieveReserveBookCnt(Map<String, String> userParam){
 		return sqlSession.selectOne("user.retrieveReserveBookCnt", userParam);
 	}
+
+public void updateMinusReserveBookCnt(Map<String, String> numberParam){
+		sqlSession.update("user.updateMinusReserveBookCnt", userParam);
+	}
 }
