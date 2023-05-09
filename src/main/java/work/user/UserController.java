@@ -138,10 +138,10 @@ checkMsg = "<div class='col-md-5-col-md-offset-2'>" + "번호를 추가하지 �
 String yesno2 = sc.next();
 if(yesno2.equals("y") {
 break id_pw_find;
-} else if(yesno2.equals("n") {}
-break;
+} else if(yesno2.equals("n") {
+break;} else checkMsg = "<div class='col-md-5-col-md-offset-2'>" + "올바른 입력값이 아님";
 }
-}
+else checkMsg = "<div class='col-md-5-col-md-offset-2'>" + "올바른 입력값이 아님";
 }
 		if(pw == null){
 			checkMsg = "<div class='col-md-5 col-md-offset-2'>"
