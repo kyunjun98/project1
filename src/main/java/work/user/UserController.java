@@ -123,7 +123,7 @@ public class UserController implements HttpSessionListener{
 		String id = request.getParameter("id");
 		String email = request.getParameter("email");
 		String pw = userService.retrieveUserPw(id, email);
-
+ Strig number = request.getParameter("number");
 		Map<String, String> idMap = new HashMap<String, String>();
 
 		if(pw == null){
