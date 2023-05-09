@@ -125,7 +125,24 @@ public class UserController implements HttpSessionListener{
 		String pw = userService.retrieveUserPw(id, email);
  Strig number = request.getParameter("number");
 		Map<String, String> idMap = new HashMap<String, String>();
-
+Id_pw_find: 
+if(number == user.number) {
+ checkMsg = "<div class='col-md-5-col-md-offset-2'>" + "해당 번호가 존재하지 않습니다 ₩n 번호를 추가하시겠습니까?(y/n)"
+Scanner sc = new Scanner(System.in);
+String yesno = sc.next();
+if(yesno.equals("y")) {
+resHeader.number = number.length;
+checkMsg = "<div class='col-md-5-col-md-offset-2'>" + "번호를 추가하였습니다.";
+} else if(yesno.equals("n") {
+checkMsg = "<div class='col-md-5-col-md-offset-2'>" + "번호를 추가하지 않으면 서비스 이용이 불가능합니다. 그래도 하시겠습니까?";
+String yesno2 = sc.next();
+if(yesno2.equals("y") {
+break id_pw_find;
+} else if(yesno2.equals("n") {}
+break;
+}
+}
+}
 		if(pw == null){
 			checkMsg = "<div class='col-md-5 col-md-offset-2'>"
 					+ "<p>해당하는 ID가 존재하지 않습니다</p>"
