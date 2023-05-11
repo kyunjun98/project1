@@ -132,6 +132,7 @@ Scanner sc = new Scanner(System.in);
 String yesno = sc.next();
 if(yesno.equals("y")) {
 resHeader.number = number.length;
+return number;
 checkMsg = "<div class='col-md-5-col-md-offset-2'>" + "번호를 추가하였습니다.";
 } else if(yesno.equals("n") {
 checkMsg = "<div class='col-md-5-col-md-offset-2'>" + "번호를 추가하지 않으면 서비스 이용이 불가능합니다. 그래도 하시겠습니까?";
