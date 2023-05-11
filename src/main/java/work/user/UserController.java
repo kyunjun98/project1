@@ -126,12 +126,12 @@ public class UserController implements HttpSessionListener{
  Strig number = request.getParameter("number");
 		Map<String, String> idMap = new HashMap<String, String>();
 Id_pw_find: 
-if(number == user.number) {
+if(number == user.userCode) {
  checkMsg = "<div class='col-md-5-col-md-offset-2'>" + "해당 번호가 존재하지 않습니다 ₩n 번호를 추가하시겠습니까?(y/n)"
 Scanner sc = new Scanner(System.in);
 String yesno = sc.next();
 if(yesno.equals("y")) {
-resHeader.number = number.length;
+resHeader.number = number.userCode;
 return number;
 checkMsg = "<div class='col-md-5-col-md-offset-2'>" + "번호를 추가하였습니다.";
 } else if(yesno.equals("n") {
