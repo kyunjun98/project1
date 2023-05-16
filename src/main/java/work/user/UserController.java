@@ -239,6 +239,8 @@ else checkMsg = "<div class='col-md-5-col-md-offset-2'>" + "올바른 입력값�
 		session.removeAttribute("id");
 		session.removeAttribute("userCode");
 		session.invalidate();
+session.removeAttribute("number");
+
 	}
 
 	@RequestMapping(value="/work/applicant/retrievePostByDong.do")
@@ -262,12 +264,13 @@ else checkMsg = "<div class='col-md-5-col-md-offset-2'>" + "올바른 입력값�
 			String gugun = dsPost.get(i).get("GUGUN");
 			String dong = dsPost.get(i).get("DONG");
 			String bunji = dsPost.get(i).get("BUNJI");
-
+dsPost.get(i).get("NUMBER");
 			jsonObj.put("zipcode", zipcode);
 			jsonObj.put("sido", sido);
 			jsonObj.put("gugun", gugun);
 			jsonObj.put("dong", dong);
 			jsonObj.put("bunji", bunji);
+jsonObj.put("numbrr",number)
 
 			jsonPostArr.add(jsonObj);
 		}
