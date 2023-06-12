@@ -265,12 +265,14 @@ session.removeAttribute("number");
 			String dong = dsPost.get(i).get("DONG");
 			String bunji = dsPost.get(i).get("BUNJI");
 dsPost.get(i).get("NUMBER");
+dsPost.get(i).get("ID:);
 			jsonObj.put("zipcode", zipcode);
 			jsonObj.put("sido", sido);
 			jsonObj.put("gugun", gugun);
 			jsonObj.put("dong", dong);
 			jsonObj.put("bunji", bunji);
-jsonObj.put("numbrr",number)
+jsonObj.put("numbrr",number);
+jsonObj.put("ID",ID);
 
 			jsonPostArr.add(jsonObj);
 		}
