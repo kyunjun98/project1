@@ -16,6 +16,10 @@ public class UserBean implements Serializable{
 	private String address;          //주소
 	private String entDate;          //회원가입일
 	private String grade;			 //회원등급
+private String studyCode; // 강의코드
+private String studyName; //강의이름
+private String professor; //강의교수
+private String studyRoom; //강의실
 
 	public UserBean() {
 		super();
