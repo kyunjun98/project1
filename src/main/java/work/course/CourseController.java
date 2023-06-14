@@ -162,7 +162,7 @@ public class CourseController {
 		courseParam.put("courseCode", courseCode);
 
 		//과목삭제시 이미 신청한 수강생들 정보 먼저 삭제
-		professorregService.deleteProfessorregAll(courseParam);
+	professorregService.deleteProfessorregAll(courseCode);	professorregService.deleteProfessorregAll(courseParam);
 		studentregService.deleteStudentregAll(courseParam);
 		courseService.deleteCourse(courseParam);
 
